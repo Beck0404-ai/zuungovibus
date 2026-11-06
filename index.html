@@ -411,6 +411,18 @@
     .bo dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; font-size: 13.5px; }
     .bo dt { color: var(--muted); }
     .bo dd { margin: 0; font-weight: 600; }
+    /* Арын зурагтай мандат */
+    .bo.has-bg {
+      padding-top: 150px; color: #fff;
+      background: linear-gradient(180deg, rgba(120, 0, 8, 0) 0%, rgba(120, 0, 8, .3) 34%, rgba(110, 0, 6, .97) 54%, #6e0006 100%), var(--bg) center 30% / cover no-repeat;
+      box-shadow: 0 8px 20px rgba(110, 0, 6, .3);
+    }
+    .bo.has-bg::before { display: none; }
+    .bo.has-bg .bo-top { position: absolute; top: 12px; left: 14px; right: 14px; }
+    .bo.has-bg .bo-num { color: #fff; text-shadow: 0 1px 4px rgba(0, 0, 0, .5); }
+    .bo.has-bg h4, .bo.has-bg dd { color: #fff; }
+    .bo.has-bg dt { color: #ffd0d0; }
+    .bo.has-bg .bo-link { color: var(--yellow); }
     .bo-link { display: inline-block; margin-top: 8px; font-size: 13px; font-weight: 700; color: var(--blue-700); text-decoration: none; }
     .now-tag {
       display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 700; color: #fff; background: var(--red);
@@ -815,7 +827,7 @@
 
     // Салбар хэлэлцүүлэг: мандатын өнгөөр танхимаа олно.
     breakouts: [
-      { title: 'Гишүүн төвтэй нам Е-4 стратегийн салбар хэлэлцүүлэг', hall: 'Саран хөхөө театр', seats: 200, ribbon: 'Улаан', link: 'https://maps.app.goo.gl/ADUvAWzA3xwADMap7',  color: '#e8202a' },
+      { title: 'Гишүүн төвтэй нам Е-4 стратегийн салбар хэлэлцүүлэг', hall: 'Саран хөхөө театр', seats: 200, ribbon: 'Улаан', bg: 'stand-red.jpg', link: 'https://maps.app.goo.gl/ADUvAWzA3xwADMap7',  color: '#e8202a' },
       { title: 'Эмнэлгийн үйлчилгээ, хүртээмжийг сайжруулах салбар хэлэлцүүлэг', hall: 'Спортын ордон', seats: 100, ribbon: 'Ногоон', link: 'https://maps.app.goo.gl/9dJNtoP65rdu1jmW8', color: '#1e9e4a' },
       { title: 'Инновац, бүтээмж нэмэгдүүлэх салбар хэлэлцүүлэг', hall: 'Элит төв', seats: 200, ribbon: 'Шар', link: 'https://maps.app.goo.gl/TZqRXAvytCxa6gGf8', color: '#ffd400' },
       { title: 'Бүс нутгийн хөгжлийн салбар хэлэлцүүлэг', hall: 'Хүүхдийн ордон', seats: 200, ribbon: 'Хөх', link: 'https://maps.app.goo.gl/mjk9GZmVMR2raimbA', color: '#1f5fe0' },
@@ -900,7 +912,7 @@
 
   function breakoutsHtml() {
     return `<div class="bo-grid">${DATA.breakouts.map((b, i) => `
-      <article class="bo" style="--rib:${esc(b.color)}">
+      <article class="bo${b.bg ? ' has-bg' : ''}" style="--rib:${esc(b.color)}${b.bg ? `;--bg:url('${esc(b.bg)}')` : ''}">
         <div class="bo-top">
           <span class="bo-num">${i + 1}</span>
           <span class="bo-rib"><i></i>${esc(b.ribbon)} мандат</span>
