@@ -411,19 +411,24 @@
     .bo dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; font-size: 13.5px; }
     .bo dt { color: var(--muted); }
     .bo dd { margin: 0; font-weight: 600; }
-    /* Арын зурагтай мандат */
+    /* Арын зурагтай мандат. --ov: давхаргын өнгө (R,G,B). Цайвар өнгөнд .light (хар бичиг) */
     .bo.has-bg {
-      padding-top: 150px; color: #fff;
-      background: linear-gradient(180deg, rgba(120, 0, 8, 0) 0%, rgba(120, 0, 8, .3) 34%, rgba(110, 0, 6, .97) 54%, #6e0006 100%), var(--bg) center top / cover no-repeat;
-      box-shadow: 0 8px 20px rgba(110, 0, 6, .3);
+      --ov: 110, 0, 6;
+      padding-top: 120px; color: #fff;
+      background: linear-gradient(180deg, rgba(var(--ov), 0) 0%, rgba(var(--ov), .3) 34%, rgba(var(--ov), .97) 54%, rgb(var(--ov)) 100%), var(--bg) center top / cover no-repeat;
+      box-shadow: 0 8px 20px rgba(var(--ov), .3);
     }
-    .bo.has-bg::before { display: none; }
-    .bo.has-bg { padding-top: 120px; }
     @media (min-width: 760px) { .bo.has-bg { padding-top: 135px; } }
+    .bo.has-bg::before { display: none; }
     .bo.has-bg .bo-num { color: #fff; text-shadow: 0 1px 4px rgba(0, 0, 0, .5); }
     .bo.has-bg h4, .bo.has-bg dd { color: #fff; }
-    .bo.has-bg dt { color: #ffd0d0; }
+    .bo.has-bg dt { color: rgba(255, 255, 255, .72); }
     .bo.has-bg .bo-link { color: var(--yellow); }
+    .bo.has-bg.light h4, .bo.has-bg.light dd { color: #14140a; }
+    .bo.has-bg.light dt { color: rgba(20, 20, 10, .62); }
+    .bo.has-bg.light .bo-link { color: var(--blue-800); }
+    .bo.has-bg.light .bo-num { color: #14140a; text-shadow: 0 1px 3px rgba(255, 255, 255, .7); }
+    .bo.has-bg.light .bo-rib { box-shadow: 0 0 0 1px rgba(0, 0, 0, .12); }
     .bo-link { display: inline-block; margin-top: 8px; font-size: 13px; font-weight: 700; color: var(--blue-700); text-decoration: none; }
     .now-tag {
       display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 700; color: #fff; background: var(--red);
@@ -828,11 +833,11 @@
 
     // Салбар хэлэлцүүлэг: мандатын өнгөөр танхимаа олно.
     breakouts: [
-      { title: 'Гишүүн төвтэй нам Е-4 стратегийн салбар хэлэлцүүлэг', hall: 'Саран хөхөө театр', seats: 200, ribbon: 'Улаан', bg: 'stand-red.jpg', link: 'https://maps.app.goo.gl/ADUvAWzA3xwADMap7',  color: '#e8202a' },
-      { title: 'Эмнэлгийн үйлчилгээ, хүртээмжийг сайжруулах салбар хэлэлцүүлэг', hall: 'Спортын ордон', seats: 100, ribbon: 'Ногоон', link: 'https://maps.app.goo.gl/9dJNtoP65rdu1jmW8', color: '#1e9e4a' },
-      { title: 'Инновац, бүтээмж нэмэгдүүлэх салбар хэлэлцүүлэг', hall: 'Элит төв', seats: 200, ribbon: 'Шар', link: 'https://maps.app.goo.gl/TZqRXAvytCxa6gGf8', color: '#ffd400' },
-      { title: 'Бүс нутгийн хөгжлийн салбар хэлэлцүүлэг', hall: 'Хүүхдийн ордон', seats: 200, ribbon: 'Хөх', link: 'https://maps.app.goo.gl/mjk9GZmVMR2raimbA', color: '#1f5fe0' },
-      { title: 'Нийгмийн хамгаалал, хүний эрхийн салбар хэлэлцүүлэг', hall: 'Соёмбо цогцолбор', seats: 100, ribbon: 'Цагаан', link: 'https://maps.app.goo.gl/LQdKEBHaxTszpzSB9', color: '#ffffff' }
+      { title: 'Гишүүн төвтэй нам Е-4 стратегийн салбар хэлэлцүүлэг', hall: 'Саран хөхөө театр', seats: 200, ribbon: 'Улаан', bg: 'stand-red.jpg', ov: '110, 0, 6', link: 'https://maps.app.goo.gl/ADUvAWzA3xwADMap7',  color: '#e8202a' },
+      { title: 'Эмнэлгийн үйлчилгээ, хүртээмжийг сайжруулах салбар хэлэлцүүлэг', hall: 'Спортын ордон', seats: 100, ribbon: 'Ногоон', bg: 'stand-green.jpg', ov: '8, 100, 22', link: 'https://maps.app.goo.gl/9dJNtoP65rdu1jmW8', color: '#1e9e4a' },
+      { title: 'Инновац, бүтээмж нэмэгдүүлэх салбар хэлэлцүүлэг', hall: 'Элит төв', seats: 200, ribbon: 'Шар', bg: 'stand-yellow.jpg', ov: '255, 230, 0', light: true, link: 'https://maps.app.goo.gl/TZqRXAvytCxa6gGf8', color: '#ffd400' },
+      { title: 'Бүс нутгийн хөгжлийн салбар хэлэлцүүлэг', hall: 'Хүүхдийн ордон', seats: 200, ribbon: 'Хөх', bg: 'stand-blue.jpg', ov: '20, 30, 128', link: 'https://maps.app.goo.gl/mjk9GZmVMR2raimbA', color: '#1f5fe0' },
+      { title: 'Нийгмийн хамгаалал, хүний эрхийн салбар хэлэлцүүлэг', hall: 'Соёмбо цогцолбор', seats: 100, ribbon: 'Цагаан', bg: 'stand-white.jpg', ov: '244, 242, 236', light: true, link: 'https://maps.app.goo.gl/LQdKEBHaxTszpzSB9', color: '#ffffff' }
     ],
 
     // Аймаг бүрийн буудал. Нэг аймагт хэд хэдэн буудал байж болно.
@@ -913,7 +918,7 @@
 
   function breakoutsHtml() {
     return `<div class="bo-grid">${DATA.breakouts.map((b, i) => `
-      <article class="bo${b.bg ? ' has-bg' : ''}" style="--rib:${esc(b.color)}${b.bg ? `;--bg:url('${esc(b.bg)}')` : ''}">
+      <article class="bo${b.bg ? ' has-bg' : ''}${b.light ? ' light' : ''}" style="--rib:${esc(b.color)}${b.bg ? `;--bg:url('${esc(b.bg)}')` : ''}${b.ov ? `;--ov:${esc(b.ov)}` : ''}">
         <div class="bo-top">
           <span class="bo-num">${i + 1}</span>
           <span class="bo-rib"><i></i>${esc(b.ribbon)} мандат</span>
