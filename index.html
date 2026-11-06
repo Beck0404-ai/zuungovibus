@@ -315,6 +315,27 @@
     .t-group p { margin: 0; font-weight: 700; }
 
     .day-tabs[hidden] { display: none; }
+
+    /* Хөтөлбөр: дарахад нээгдэнэ */
+    .prog-h2 { margin: 0; text-transform: none; text-shadow: none; }
+    .prog-toggle {
+      width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 16px 18px; border: 0; border-radius: var(--radius); cursor: pointer; text-align: left;
+      background: var(--yellow); color: var(--yellow-ink); box-shadow: 0 8px 22px rgba(0, 0, 40, .3);
+      transition: transform .15s, box-shadow .2s;
+    }
+    .prog-toggle:hover { box-shadow: 0 10px 26px rgba(0, 0, 40, .4); }
+    .prog-toggle:active { transform: scale(.985); }
+    .prog-toggle:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+    .pt-text { display: flex; flex-direction: column; gap: 2px; }
+    .pt-title { font: 800 22px var(--font-h); text-transform: uppercase; letter-spacing: .01em; }
+    .pt-sub { font: 600 13px var(--font-b); opacity: .75; }
+    .pt-chev { width: 28px; height: 28px; flex: none; transition: transform .35s ease; }
+    .prog-toggle[aria-expanded="true"] .pt-chev { transform: rotate(180deg); }
+    .prog-panel { padding-top: 16px; }
+    .prog-panel:not([hidden]) { animation: panelIn .45s ease-out; }
+    @keyframes panelIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .prog-panel:not([hidden]) { animation: none; } .pt-chev { transition: none; } }
     .day-tabs { display: flex; gap: 8px; margin: 0 0 16px; }
     .day-btn {
       flex: 1; max-width: 200px; cursor: pointer; border: none; border-radius: 12px; padding: 12px 10px;
@@ -593,10 +614,17 @@
     </div>
 
     <section id="program">
-      <h2>Хөтөлбөр</h2>
-      <p class="sub" id="programSub"></p>
-      <div class="day-tabs" id="dayTabs" role="tablist" aria-label="Өдөр сонгох"></div>
-      <div id="programBody"></div>
+      <h2 class="prog-h2">
+        <button type="button" class="prog-toggle" id="progToggle" aria-expanded="false" aria-controls="programPanel">
+          <span class="pt-text"><span class="pt-title">Хөтөлбөр</span><span class="pt-sub">2026.11.07, Бямба · Харахын тулд дарна уу</span></span>
+          <svg class="pt-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </h2>
+      <div class="prog-panel" id="programPanel" hidden>
+        <p class="sub" id="programSub"></p>
+        <div class="day-tabs" id="dayTabs" role="tablist" aria-label="Өдөр сонгох"></div>
+        <div id="programBody"></div>
+      </div>
     </section>
 
     <section id="hotels">
@@ -961,6 +989,15 @@
     <div class="card"><h3>${esc(c.name)}</h3><p>${esc(c.role)} · ${telLink(c.phone)}</p></div>`).join('');
 
   // ---- Tabs highlight on scroll
+  // ---- Хөтөлбөр нээх/хаах
+  function setProgram(open) {
+    $('#programPanel').hidden = !open;
+    $('#progToggle').setAttribute('aria-expanded', open);
+    $('.pt-sub').textContent = open ? '2026.11.07, Бямба · Хаахын тулд дарна уу' : '2026.11.07, Бямба · Харахын тулд дарна уу';
+  }
+  $('#progToggle').addEventListener('click', () => setProgram($('#programPanel').hidden));
+  document.querySelector('.tabs a[data-tab="program"]').addEventListener('click', () => setProgram(true));
+
   const tabs = document.querySelectorAll('.tabs a');
   const io = new IntersectionObserver(ents => ents.forEach(en => {
     if (en.isIntersecting) tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === en.target.id));
