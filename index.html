@@ -306,6 +306,13 @@
     .t-item.key .t-title { color: var(--blue-900); }
     .t-item.speech { padding-top: 10px; padding-bottom: 10px; }
     .t-with-logo { display: flex; align-items: center; gap: 12px; }
+    .t-ic {
+      flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center;
+      background: var(--blue-50); color: var(--blue-700);
+    }
+    .t-ic svg { width: 24px; height: 24px; }
+    .t-item.break .t-ic { background: #fff3b0; color: #7a5c00; }
+    .t-item.key .t-ic { background: #ffe1e1; color: var(--red); }
     .t-logo { flex: none; width: 46px; height: 52px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0, 0, 40, .2)); }
     .t-aimag {
       display: inline-block; font: 700 11px var(--font-h); text-transform: uppercase; letter-spacing: .04em;
@@ -808,7 +815,7 @@
     // group: хэсгийн дэд гарчиг. breakouts: true бол салбар хэлэлцүүлгийн танхимуудыг харуулна.
     program: [
       { date: '2026-11-07', tab: '11/07 Бямба', day: '2026 оны 11 сарын 07, Бямба гараг', items: [
-        { start: '09:00', end: '10:00', title: 'Бүртгэл', type: 'break', lines: [
+        { start: '09:00', end: '10:00', icon: 'qr', title: 'Бүртгэл', type: 'break', lines: [
           { text: 'Нэгдсэн хуралдааны ирц бүртгэл QR кодоор' },
           { text: 'Оролцогчдод гарын материал тараах' }
         ]},
@@ -820,14 +827,14 @@
         { start: '11:40', end: '11:50', aimag: 'Өмнөговь',   logo: 'logo-omnogovi.png', title: 'Лувсангийн Энхболд', text: 'Аймгийн МАН-ын хорооны даргын илтгэл, танилцуулга' },
         { start: '11:50', end: '12:00', aimag: 'Сүхбаатар',  logo: 'logo-sukhbaatar.png', title: 'Дашзэвгийн Амарбат', text: 'Аймгийн МАН-ын хорооны даргын илтгэл, танилцуулга' },
         { start: '12:00', end: '12:10', aimag: 'Хэнтий',     logo: 'logo-khentii.png', title: 'Гантөмөрийн Хэрлэнчулуун', text: 'Аймгийн МАН-ын хорооны даргын илтгэл, танилцуулга' },
-        { start: '12:10', end: '13:30', title: 'Асуулт, хариулт', text: 'Монгол Ардын Намын дарга, Монгол Улсын Ерөнхий сайд Ням-Осорын Учрал оролцогчдын асуултад хариулна.' },
-        { start: '13:30', end: '14:30', title: 'Өдрийн хоол', text: 'Зөвлөгөөний нэгдсэн танхимд', type: 'break' },
+        { start: '12:10', end: '13:30', icon: 'qa', title: 'Асуулт, хариулт', text: 'Монгол Ардын Намын дарга, Монгол Улсын Ерөнхий сайд Ням-Осорын Учрал оролцогчдын асуултад хариулна.' },
+        { start: '13:30', end: '14:30', icon: 'meal', title: 'Өдрийн хоол', text: 'Зөвлөгөөний нэгдсэн танхимд', type: 'break' },
         { start: '14:30', end: '15:30', type: 'key', logo: 'logo-man.png', title: 'Монгол Ардын Намын Ерөнхий нарийн бичгийн дарга Янгугийн Содбаатарын илтгэл, танилцуулга' },
-        { start: '15:30', end: '16:00', title: 'Салбар хэлэлцүүлэг' },
+        { start: '15:30', end: '16:00', icon: 'split', title: 'Салбар хэлэлцүүлэг' },
         { start: '16:00', end: '18:00', title: 'Бодлогын хороодын салбар хэлэлцүүлэг, 5 тусдаа танхимд', breakouts: true },
-        { start: '18:00', end: '18:30', title: 'Зөвлөгөөний нэгдсэн танхимд цуглах' },
-        { start: '18:30', end: '19:00', type: 'key', title: 'Зөвлөгөөний нэгдсэн дүгнэлт' },
-        { start: '19:00', end: '22:00', title: 'Оройн хүлээн авалт', type: 'break', lines: [
+        { start: '18:00', end: '18:30', icon: 'gather', title: 'Зөвлөгөөний нэгдсэн танхимд цуглах' },
+        { start: '18:30', end: '19:00', type: 'key', icon: 'summary', title: 'Зөвлөгөөний нэгдсэн дүгнэлт' },
+        { start: '19:00', end: '22:00', icon: 'toast', title: 'Оройн хүлээн авалт', type: 'break', lines: [
           { text: 'Бүртгэл QR кодоор' },
           { text: 'Оройн хүлээн авалт, Зөвлөгөөний нэгдсэн танхимд' }
         ]}
@@ -919,6 +926,18 @@
   if (!DATA.program.some(d => d.date === localISO(new Date()))) activeDay = DATA.program.length - 1;
 
 
+  // Хөтөлбөрийн дүрс тэмдэг (24x24, зураасан)
+  const PICONS = {
+    qr: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3M21 14v.01M17 21h4v-4M14 18v3"/><path d="M6 6h1v1H6zM17 6h1v1h-1zM6 17h1v1H6z" fill="currentColor"/>',
+    qa: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"/><path d="M10 9.5a2.2 2.2 0 1 1 3 2c-.7.3-1 .8-1 1.5"/><path d="M12 16h.01"/>',
+    meal: '<path d="M7 3v8M4.5 3v5a2.5 2.5 0 0 0 5 0V3M7 11v10"/><path d="M17 21V3c-2.2 1.3-3.5 3.6-3.5 7v3H17"/>',
+    split: '<circle cx="12" cy="5" r="2.2"/><path d="M12 7.2V11M12 11l-6 4M12 11l6 4M12 11v4"/><circle cx="5" cy="18" r="2.2"/><circle cx="12" cy="18" r="2.2"/><circle cx="19" cy="18" r="2.2"/>',
+    gather: '<circle cx="12" cy="7" r="3"/><path d="M6.5 20a5.5 5.5 0 0 1 11 0"/><circle cx="4.5" cy="10" r="2"/><circle cx="19.5" cy="10" r="2"/><path d="M1.5 18.5a3.5 3.5 0 0 1 4.5-3.3M22.5 18.5a3.5 3.5 0 0 0-4.5-3.3"/>',
+    summary: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 14.5l2 2 4-4.5"/>',
+    toast: '<path d="M8 3h4l-.5 6a2.5 2.5 0 0 1-3 0zM8.5 10.5L7 20M5 20h4"/><path d="M16 3h4l-.5 6a2.5 2.5 0 0 1-3 0zM17.5 10.5L19 20M17 20h4"/><path d="M12 2l1 1M14 1.5v1"/>'
+  };
+  const iconHtml = k => `<span class="t-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${PICONS[k]}</svg></span>`;
+
   function breakoutsHtml() {
     return `<div class="bo-grid">${DATA.breakouts.map((b, i) => `
       <article class="bo${b.bg ? ' has-bg' : ''}${b.light ? ' light' : ''}" style="--rib:${esc(b.color)}${b.bg ? `;--bg:url('${esc(b.bg)}')` : ''}${b.ov ? `;--ov:${esc(b.ov)}` : ''}">
@@ -955,11 +974,11 @@
           return `<li class="t-item ${cls}">
             <div class="t-time">${esc(it.start)}${it.end ? '<br>' + esc(it.end) : '<br><small>—</small>'}</div>
             <div class="t-body">
-              ${it.logo ? `<div class="t-with-logo"><img class="t-logo" src="${esc(it.logo)}" alt=""><div>` : ''}
+              ${it.logo || it.icon ? `<div class="t-with-logo">${it.logo ? `<img class="t-logo" src="${esc(it.logo)}" alt="">` : iconHtml(it.icon)}<div>` : ''}
               ${it.aimag ? `<span class="t-aimag">${esc(it.aimag)}</span>` : ''}
               <p class="t-title">${esc(it.title)}${isNow ? '<span class="now-tag">Одоо</span>' : ''}</p>
               ${it.text ? `<p class="t-meta">${esc(it.text)}</p>` : ''}
-              ${it.logo ? '</div></div>' : ''}
+              ${it.logo || it.icon ? '</div></div>' : ''}
               ${it.lines ? `<ol class="t-lines">${it.lines.map(l => `<li><p>${esc(l.text)}</p></li>`).join('')}</ol>` : ''}
               ${it.breakouts ? breakoutsHtml() : ''}
             </div>
