@@ -296,6 +296,9 @@
     .t-item.break { border-left-color: var(--yellow); background: #fffdf0; }
     .t-item.now { outline: 2px solid var(--red); }
     .t-time { font-family: var(--font-h); font-weight: 700; color: var(--blue-700); font-size: 15px; line-height: 1.35; }
+    /* Цагийг мөрийн дунд тэнцүүлнэ (салбар хэлэлцүүлгийн өндөр мөрөөс бусад) */
+    .t-item { align-items: center; }
+    .t-item:has(.bo-grid) { align-items: start; }
     .t-title { font-weight: 700; margin: 0; }
     .t-meta { color: var(--muted); font-size: 14px; margin: 3px 0 0; }
     .t-body { min-width: 0; }
