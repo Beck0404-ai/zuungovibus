@@ -656,6 +656,11 @@
     .foot-main img { display: block; margin: 0 auto 10px; height: 46px; width: auto; filter: drop-shadow(0 4px 10px rgba(0, 0, 30, .4)); }
     .foot-t { margin: 0; font: 800 15px var(--font-h); text-transform: uppercase; color: #fff; letter-spacing: .02em; }
     .foot-s { margin: 4px 0 0; font-size: 13px; color: #c9d2ff; }
+    .powered {
+      margin: 0; padding: 0 16px 12px; text-align: right;
+      font: 600 11px var(--font-h); letter-spacing: .06em; color: rgba(201, 210, 255, .65);
+    }
+    .powered b { color: var(--yellow); font-weight: 800; }
     @media (prefers-reduced-motion: reduce) {
       .foot::before, .foot::after, .foot-waves { animation: none; }
       .tk-track { animation-duration: 120s; }
@@ -794,6 +799,7 @@
       <p class="foot-t">Удирдах ажилтны бүсийн зөвлөгөөн</p>
       <p class="foot-s">Зүүн болон Говийн бүс · <span id="footDate"></span></p>
     </div>
+    <p class="powered">Powered by <b>SDY DORNOGOVI</b></p>
   </footer>
 
   <script>
