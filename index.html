@@ -303,7 +303,7 @@
     .t-item.key .t-title { color: var(--blue-900); }
     .t-item.speech { padding-top: 10px; padding-bottom: 10px; }
     .t-with-logo { display: flex; align-items: center; gap: 12px; }
-    .t-logo { flex: none; width: 46px; height: auto; filter: drop-shadow(0 2px 4px rgba(0, 0, 40, .2)); }
+    .t-logo { flex: none; width: 46px; height: 52px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0, 0, 40, .2)); }
     .t-aimag {
       display: inline-block; font: 700 11px var(--font-h); text-transform: uppercase; letter-spacing: .04em;
       background: var(--yellow); color: var(--yellow-ink); padding: 2px 8px; border-radius: 999px; margin-bottom: 3px;
@@ -792,8 +792,8 @@
           { text: 'Оролцогчдод гарын материал тараах' }
         ]},
         { start: '10:00', end: '11:00', type: 'key', logo: 'emblem.png', title: 'Монгол Ардын Намын дарга, Монгол Улсын Ерөнхий сайд Ням-Осорын Учралын илтгэл, танилцуулга' },
-        { start: '11:00', end: '11:10', aimag: 'Дорноговь',  title: 'Очирпүрэвийн Батжаргал', text: 'Аймгийн МАН-ын хорооны даргын илтгэл, танилцуулга' },
-        { start: '11:10', end: '11:20', aimag: 'Говьсүмбэр', title: 'Гомбодоржийн Батсуурь', text: 'Аймгийн МАН-ын хорооны даргын илтгэл, танилцуулга' },
+        { start: '11:00', end: '11:10', aimag: 'Дорноговь',  logo: 'logo-dornogovi.png', title: 'Очирпүрэвийн Батжаргал', text: 'Аймгийн МАН-ын хорооны даргын илтгэл, танилцуулга' },
+        { start: '11:10', end: '11:20', aimag: 'Говьсүмбэр', logo: 'logo-govisumber.png', title: 'Гомбодоржийн Батсуурь', text: 'Аймгийн МАН-ын хорооны даргын илтгэл, танилцуулга' },
         { start: '11:20', end: '11:30', aimag: 'Дорнод',     title: 'Мягмарсүрэнгийн Бадамсүрэн', text: 'Аймгийн МАН-ын хорооны даргын илтгэл, танилцуулга' },
         { start: '11:30', end: '11:40', aimag: 'Дундговь',   title: 'Самданнямын Мөнхчулуун', text: 'Аймгийн МАН-ын хорооны даргын илтгэл, танилцуулга' },
         { start: '11:40', end: '11:50', aimag: 'Өмнөговь',   title: 'Лувсангийн Энхболд', text: 'Аймгийн МАН-ын хорооны даргын илтгэл, танилцуулга' },
@@ -934,11 +934,11 @@
           return `<li class="t-item ${cls}">
             <div class="t-time">${esc(it.start)}${it.end ? '<br>' + esc(it.end) : '<br><small>—</small>'}</div>
             <div class="t-body">
+              ${it.logo ? `<div class="t-with-logo"><img class="t-logo" src="${esc(it.logo)}" alt=""><div>` : ''}
               ${it.aimag ? `<span class="t-aimag">${esc(it.aimag)}</span>` : ''}
-              ${it.logo ? `<div class="t-with-logo"><img class="t-logo" src="${esc(it.logo)}" alt="" width="135" height="150">` : ''}
               <p class="t-title">${esc(it.title)}${isNow ? '<span class="now-tag">Одоо</span>' : ''}</p>
-              ${it.logo ? '</div>' : ''}
               ${it.text ? `<p class="t-meta">${esc(it.text)}</p>` : ''}
+              ${it.logo ? '</div></div>' : ''}
               ${it.lines ? `<ol class="t-lines">${it.lines.map(l => `<li><p>${esc(l.text)}</p></li>`).join('')}</ol>` : ''}
               ${it.breakouts ? breakoutsHtml() : ''}
             </div>
