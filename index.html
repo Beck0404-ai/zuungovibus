@@ -414,11 +414,12 @@
     /* Арын зурагтай мандат */
     .bo.has-bg {
       padding-top: 150px; color: #fff;
-      background: linear-gradient(180deg, rgba(120, 0, 8, 0) 0%, rgba(120, 0, 8, .3) 34%, rgba(110, 0, 6, .97) 54%, #6e0006 100%), var(--bg) center 30% / cover no-repeat;
+      background: linear-gradient(180deg, rgba(120, 0, 8, 0) 0%, rgba(120, 0, 8, .3) 34%, rgba(110, 0, 6, .97) 54%, #6e0006 100%), var(--bg) center top / cover no-repeat;
       box-shadow: 0 8px 20px rgba(110, 0, 6, .3);
     }
     .bo.has-bg::before { display: none; }
-    .bo.has-bg .bo-top { position: absolute; top: 12px; left: 14px; right: 14px; }
+    .bo.has-bg { padding-top: 120px; }
+    @media (min-width: 760px) { .bo.has-bg { padding-top: 135px; } }
     .bo.has-bg .bo-num { color: #fff; text-shadow: 0 1px 4px rgba(0, 0, 0, .5); }
     .bo.has-bg h4, .bo.has-bg dd { color: #fff; }
     .bo.has-bg dt { color: #ffd0d0; }
