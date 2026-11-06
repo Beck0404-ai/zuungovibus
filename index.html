@@ -1003,11 +1003,12 @@
 
   // ---- Chips + hotel cards
   let current = null;
-  $("#chips").innerHTML = ["Бүгд", ...aimags].map(a =>
+  $("#chips").innerHTML = aimags.map(a =>
     `<button class="chip" role="tab" data-aimag="${esc(a)}">${esc(a)}</button>`).join("");
+  // Сонгосон аймгаа дахин дарвал бүх буудал руу буцна
   $("#chips").addEventListener("click", e => {
     const b = e.target.closest(".chip"); if (!b) return;
-    select(b.dataset.aimag === "Бүгд" ? null : b.dataset.aimag, 0);
+    select(b.dataset.aimag === current ? null : b.dataset.aimag, 0);
   });
 
   function hotelCard(a, h, i, active) {
@@ -1068,7 +1069,7 @@
     }
     current = aimag;
     document.querySelectorAll(".chip").forEach(c =>
-      c.classList.toggle("active", c.dataset.aimag === (aimag || "Бүгд")));
+      c.classList.toggle("active", c.dataset.aimag === aimag));
     const list = aimag ? DATA.hotels[aimag].map((h, i) => hotelCard(aimag, h, i, i === idx))
                        : aimags.flatMap(a => DATA.hotels[a].map((h, i) => hotelCard(a, h, i, false)));
     $("#hotelList").innerHTML = list.join("");
