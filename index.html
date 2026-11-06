@@ -318,6 +318,52 @@
 
     /* Хөтөлбөр: дарахад нээгдэнэ */
     .prog-h2 { margin: 0; text-transform: none; text-shadow: none; }
+    /* ---------- Цаг агаар ---------- */
+    .wx-sec { padding-top: 24px; padding-bottom: 0; }
+    .wx {
+      border-radius: var(--radius); padding: 14px 16px 16px; color: #fff;
+      background: rgba(255, 255, 255, .1); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16), 0 8px 22px rgba(0, 0, 40, .25);
+    }
+    .wx-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .wx-title { display: inline-flex; align-items: center; gap: 8px; font: 800 13px var(--font-h); text-transform: uppercase; letter-spacing: .04em; }
+    .wx-dot { width: 8px; height: 8px; border-radius: 50%; background: #3ee07a; box-shadow: 0 0 0 0 rgba(62, 224, 122, .6); animation: wxPulse 2s infinite; }
+    @keyframes wxPulse { 70% { box-shadow: 0 0 0 7px rgba(62, 224, 122, 0); } 100% { box-shadow: 0 0 0 0 rgba(62, 224, 122, 0); } }
+    .wx-upd { font-size: 12px; color: #c9d2ff; }
+    .wx-top { display: flex; align-items: center; gap: 14px; margin-top: 10px; flex-wrap: wrap; }
+    .wx-top:empty { display: none; }
+    .wx-ic { width: 58px; height: 58px; flex: none; filter: drop-shadow(0 3px 6px rgba(0, 0, 30, .35)); }
+    .wx-temp { font: 800 42px/1 var(--font-h); letter-spacing: -.02em; }
+    .wx-desc { font-weight: 700; font-size: 15px; }
+    .wx-feel { color: #c9d2ff; font-size: 13px; }
+    .wx-det { margin-left: auto; display: flex; gap: 8px; }
+    .wx-det span {
+      display: inline-flex; flex-direction: column; align-items: center; min-width: 66px; padding: 7px 8px; border-radius: 12px;
+      background: rgba(255, 255, 255, .08); font: 700 14px var(--font-h);
+    }
+    .wx-det small { font: 600 11px var(--font-b); color: #c9d2ff; }
+    .wx-days { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+    .wx-days:empty { display: none; }
+    .wx-day {
+      display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 9px 6px; border-radius: 12px;
+      background: rgba(255, 255, 255, .08); text-align: center; font-size: 12.5px;
+    }
+    .wx-day b { font: 800 12.5px var(--font-h); }
+    .wx-day svg { width: 32px; height: 32px; margin: 2px 0; }
+    .wx-day .mm { font: 700 14px var(--font-h); }
+    .wx-day .mm i { font-style: normal; opacity: .65; font-weight: 600; }
+    .wx-day .pr { font-size: 11.5px; color: #c9d2ff; }
+    .wx-day.ev { background: var(--yellow); color: var(--yellow-ink); box-shadow: 0 6px 16px rgba(255, 229, 0, .25); }
+    .wx-day.ev .pr { color: #4d4600; }
+    .wx-day.ev svg [fill="#fff"] { stroke: #3a3500; stroke-width: 1.3; }
+    .wx-err { margin: 10px 0 0; font-size: 14px; color: #c9d2ff; }
+    @media (max-width: 600px) {
+      .wx-det { margin-left: 0; width: 100%; }
+      .wx-det span { flex: 1; }
+      .wx-temp { font-size: 38px; }
+    }
+    @media (prefers-reduced-motion: reduce) { .wx-dot { animation: none; } }
+
     .prog-toggle {
       width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;
       padding: 16px 18px; border: 0; border-radius: var(--radius); cursor: pointer; text-align: left;
@@ -612,6 +658,17 @@
     <div id="draftNote" class="draft" hidden>
       Буудлын мэдээллийг баталгаажуулж байна. Хөтөлбөр батлагдсан.
     </div>
+
+    <section id="weather" class="wx-sec">
+      <div class="wx" id="wx" aria-live="polite">
+        <div class="wx-head">
+          <span class="wx-title"><span class="wx-dot" aria-hidden="true"></span>Сайншанд · Цаг агаар</span>
+          <span class="wx-upd" id="wxUpd">Ачааллаж байна…</span>
+        </div>
+        <div class="wx-top" id="wxNow"></div>
+        <div class="wx-days" id="wxDays"></div>
+      </div>
+    </section>
 
     <section id="program">
       <h2 class="prog-h2">
@@ -997,6 +1054,77 @@
   }
   $('#progToggle').addEventListener('click', () => setProgram($('#programPanel').hidden));
   document.querySelector('.tabs a[data-tab="program"]').addEventListener('click', () => setProgram(true));
+
+  // ---------- Цаг агаар (Open-Meteo, 10 минут тутам шинэчилнэ) ----------
+  (() => {
+    const URL_WX = 'https://api.open-meteo.com/v1/forecast?latitude=44.8916&longitude=110.13'
+      + '&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,relative_humidity_2m,is_day'
+      + '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max'
+      + '&timezone=Asia%2FUlaanbaatar&forecast_days=3&wind_speed_unit=ms';
+    const DESC = c => c === 0 ? 'Цэлмэг' : c === 1 ? 'Голдуу цэлмэг' : c === 2 ? 'Багавтар үүлтэй' : c === 3 ? 'Үүлэрхэг'
+      : c <= 48 ? 'Манантай' : c <= 57 ? 'Шиврээ бороо' : c <= 67 ? 'Бороотой' : c <= 77 ? 'Цастай'
+      : c <= 82 ? 'Аадар бороо' : c <= 86 ? 'Цас орно' : 'Аянгатай';
+    const SUN = '<circle cx="12" cy="12" r="4.6" fill="#ffd21f"/><g stroke="#ffd21f" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g>';
+    const MOON = '<path d="M15.5 3.5a8.5 8.5 0 1 0 5 13.6A7 7 0 0 1 15.5 3.5z" fill="#ffe98a"/>';
+    const CLOUD = (y = 0) => `<path transform="translate(0 ${y})" d="M7 19a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 17.8 9.6 4.7 4.7 0 0 1 17.5 19z" fill="#fff"/>`;
+    const SMALL = d => `<g transform="translate(-3 -3) scale(.62)">${d ? SUN : MOON}</g>`;
+    const ICON = (c, d = 1) => {
+      let g;
+      if (c === 0) g = d ? SUN : MOON;
+      else if (c <= 2) g = SMALL(d) + CLOUD(1.5);
+      else if (c === 3) g = CLOUD();
+      else if (c <= 48) g = '<g stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M3 8h18M5 12h14M3 16h18M7 20h10"/></g>';
+      else if (c <= 67 || (c >= 80 && c <= 82)) g = CLOUD(-3) + '<g stroke="#7fd0ff" stroke-width="2" stroke-linecap="round"><path d="M8 19l-1 3M12 19l-1 3M16 19l-1 3"/></g>';
+      else if (c <= 86) g = CLOUD(-3) + '<g fill="#e6f4ff"><circle cx="8" cy="20" r="1.3"/><circle cx="12" cy="22" r="1.3"/><circle cx="16" cy="20" r="1.3"/></g>';
+      else g = CLOUD(-3) + '<path d="M13 15l-3 5h3l-2 4 5-6h-3l2-3z" fill="#ffd21f"/>';
+      return `<svg viewBox="0 0 24 24" aria-hidden="true">${g}</svg>`;
+    };
+    const WD = ['Ням', 'Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан', 'Бямба'];
+    const r = v => Math.round(v);
+    const deg = v => `${r(v) === 0 ? 0 : r(v)}°`;
+
+    async function load() {
+      try {
+        const res = await fetch(URL_WX, { cache: 'no-store' });
+        if (!res.ok) throw 0;
+        const w = await res.json(), c = w.current, d = w.daily;
+        $('#wxNow').innerHTML = `
+          ${ICON(c.weather_code, c.is_day).replace('<svg', '<svg class="wx-ic"')}
+          <div><div class="wx-temp">${deg(c.temperature_2m)}C</div></div>
+          <div><div class="wx-desc">${DESC(c.weather_code)}</div><div class="wx-feel">Мэдрэгдэх ${deg(c.apparent_temperature)}</div></div>
+          <div class="wx-det">
+            <span>${c.wind_speed_10m.toFixed(1)} м/с<small>Салхи</small></span>
+            <span>${r(c.relative_humidity_2m)}%<small>Чийгшил</small></span>
+          </div>`;
+        const today = c.time.slice(0, 10);
+        $('#wxDays').innerHTML = d.time.map((t, i) => {
+          const dt = new Date(t + 'T12:00:00'), ev = t === DATA.date;
+          const name = ev ? 'Зөвлөгөөн' : t === today ? 'Өнөөдөр' : WD[dt.getDay()];
+          const pp = d.precipitation_probability_max?.[i];
+          return `<div class="wx-day ${ev ? 'ev' : ''}">
+            <b>${name}</b><span>${t.slice(5).replace('-', '/')}</span>
+            ${ICON(d.weather_code[i])}
+            <span class="mm">${deg(d.temperature_2m_max[i])} <i>/ ${deg(d.temperature_2m_min[i])}</i></span>
+            <span class="pr">${DESC(d.weather_code[i])}${pp ? ` · ${pp}%` : ''}</span>
+          </div>`;
+        }).join('');
+        $('#wxUpd').textContent = `${c.time.slice(11, 16)}-д шинэчилсэн`;
+        $('#wxErr')?.remove();
+        last = Date.now();
+      } catch (e) {
+        // Өмнө ачаалсан мэдээ байвал хэвээр үлдээнэ
+        if (!$('#wxNow').innerHTML && !$('#wxErr')) {
+          $('#wxUpd').textContent = '';
+          $('#wxDays').insertAdjacentHTML('beforebegin', '<p class="wx-err" id="wxErr">Цаг агаарын мэдээ ачаалж чадсангүй. Дараа дахин шалгана уу.</p>');
+        }
+      }
+    }
+    let last = 0;
+    const refresh = () => { if (!document.hidden && Date.now() - last > 9 * 60 * 1000) load(); };
+    load();
+    setInterval(refresh, 60 * 1000);
+    document.addEventListener('visibilitychange', refresh);
+  })();
 
   const tabs = document.querySelectorAll('.tabs a');
   const io = new IntersectionObserver(ents => ents.forEach(en => {
